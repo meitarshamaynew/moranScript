@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>תסריט שיחה לפקודים - מטה מורן זר קצנשטיין</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%93%9E%3C/text%3E%3C/svg%3E">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #eff6ff;
+            --success: #16a34a;
+            --success-light: #f0fdf4;
+            --warning: #ca8a04;
+            --warning-light: #fefce8;
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+            --text: #1f2937;
+            --gray-light: #f3f4f6;
+            --border: #e5e7eb;
+            --whatsapp-color: #25d366;
+        }
+
+        /* מניעת תזוזות ומתיחות מסך לצדדים בנייד */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            position: relative;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: var(--text);
+            line-height: 1.6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            padding: 10px;
+            padding-bottom: 90px; /* מרווח ביטחון לכפתור הצף בתחתית הנייד */
+        }
+
+        /* פאנל ניהול עליון - מוסתר אוטומטית בניידים למניעת באגים */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #0f172a;
+            color: white;
+            padding: 10px 20px;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .admin-title { font-weight: bold; font-size: 0.95rem; }
+        .admin-btns { display: flex; gap: 10px; }
+        .btn-admin {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #edit-btn { background-color: var(--warning); color: #0f172a; }
+        .btn-save { background-color: var(--success); color: white; display: none; }
+
+        /* סימון בעת עריכה במחשב */
+        .edit-active .editable-target:hover {
+            outline: 2px dashed var(--warning);
+            background-color: #fffde6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 20px 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 { font-size: 1.35rem; margin-bottom: 6px; }
+        header p { font-size: 0.95rem; opacity: 0.9; font-weight: bold; }
+        
+        .goal-banner {
+            background-color: #f59e0b;
+            color: #0f172a;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 8px;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 5px;
+        }
+
+        .highlight-box {
+            background-color: #fffbeb;
+            border-right: 4px solid #f59e0b;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .quote-box {
+            background-color: var(--primary-light);
+            border-right: 4px solid var(--primary);
+            padding: 12px;
+            border-radius: 4px 8px 8px 4px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            white-space: pre-line;
+        }
+
+        .keyword {
+            background-color: #fef08a;
+            color: #854d0e;
+            padding: 1px 3px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* כפתורי ניווט בנייד - מוצגים אחד מתחת לשני ללחיצה קלה */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            display: block;
+        }
+
+        .btn-yes { background-color: var(--success); color: white; }
+        .btn-no { background-color: var(--danger); color: white; }
+
+        .branch { display: none; }
+
+        /* התאמת טבלאות מחירים לנייד */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 12px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 280px;
+            font-size: 0.9rem;
+        }
+        .price-table th, .price-table td {
+            border: 1px solid var(--border);
+            padding: 8px;
+            text-align: center;
+        }
+        .price-table th { background-color: var(--gray-light); font-weight: bold; }
+
+        /* סיווג צבעי CRM */
+        .status-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .status-card {
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .status-green { background-color: var(--success-light); border-color: var(--success); color: #14532d; }
+        .status-yellow { background-color: var(--warning-light); border-color: var(--warning); color: #713f12; }
+        .status-red { background-color: var(--danger-light); border-color: var(--danger); color: #7f1d1d; }
+
+        .accordion {
+            background-color: var(--gray-light);
+            cursor: pointer;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            text-align: right;
+            outline: none;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion:after { content: '\02795'; font-size: 0.7rem; color: #777; }
+        .active:after { content: "\2212"; }
+        .panel {
+            padding: 0 10px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            border-right: 3px solid var(--primary);
+        }
+        .panel p { padding: 10px 0; font-size: 0.95rem; }
+
+        .phone-input-wrapper {
+            background-color: var(--primary-light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #b9d5ff;
+        }
+        .phone-input-wrapper label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .phone-field {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.05rem;
+            border: 2px solid #3b82f6;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .copy-box {
+            background: #fafafa;
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .btn-action {
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: none;
+            flex: 1;
+            text-align: center;
+        }
+        .btn-copy { background: #6b7280; color: white; }
+        .btn-wa { background: var(--whatsapp-color); color: white; }
+
+        .alert-live {
+            background-color: #fef2f2;
+            border: 2px dashed #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            color: #991b1b;
+            font-size: 0.95rem;
+        }
+        
+        .btn-self-fill {
+            display: block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        /* 📱 כפתור קבוע צף למטה - מותאם במיוחד לניידים */
+        .sidebar-toggle-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            left: 15px;
+            background-color: var(--danger);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 999;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        /* 📱 מגירת שיחות קשות חסינת תקלות מסך */
+        .sidebar-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1002;
+            transform: translateX(100%); /* הזזה חסינת מתיחה */
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+            visibility: hidden;
+        }
+        .sidebar-drawer.open {
+            transform: translateX(0);
+            visibility: visible;
+        }
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1001;
+            display: none;
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .sidebar-header h2 { font-size: 1.15rem; color: var(--danger); }
+        .close-sidebar-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: #4b5563; }
+        .side-card {
+            background: var(--gray-light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-right: 4px solid var(--danger);
+            font-size: 0.95rem;
+        }
+
+        /* 💻 התאמות רספונסיביות למחשב (טאבלט ומעלה) */
+        @media (min-width: 768px) {
+            body { padding: 15px; padding-top: 80px; padding-bottom: 20px; }
+            .admin-panel { display: flex; } /* פאנל עריכה מוצג רק במחשב */
+            header { padding: 25px 20px; margin-bottom: 20px; }
+            header h1 { font-size: 1.8rem; }
+            header p { font-size: 1.1rem; }
+            .goal-banner { font-size: 1.1rem; }
+            .card { padding: 20px; margin-bottom: 20px; }
+            .step-title { font-size: 1.2rem; margin-bottom: 12px; }
+            .btn-group { flex-direction: row; }
+            .btn { width: auto; flex: 1; }
+            .status-block { flex-direction: row; }
+            .status-card { flex: 1; }
+            .grid-tips { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            
+            /* לשונית ימנית קלאסית ונקייה למסכי מחשב */
+            .sidebar-toggle-btn {
+                left: auto;
+                bottom: auto;
+                top: 40%;
+                right: 0;
+                width: auto;
+                padding: 14px 18px;
+                border-radius: 12px 0 0 12px;
+                transform: translateY(-50%);
+            }
+            .sidebar-toggle-btn:hover {
+                transform: translateY(-50%) scale(1.03);
+            }
+            .sidebar-drawer {
+                width: 420px;
+                right: 0;
+                transform: translateX(100%);
+                border-left: 5px solid var(--danger);
+            }
+        }
+    </style>
+</head>
+<body class="">
+
+<div class="admin-panel" id="adminControl">
+    <div class="admin-title">🛠️ מצב עריכה למנהלת המטה (זמין ממחשב בלבד):</div>
+    <div class="admin-btns">
+        <button class="btn-admin" id="edit-btn" onclick="toggleEditMode()" style="background-color: var(--warning); color: rgb(15, 23, 42);">הפעל מצב עריכה</button>
+        <button class="btn-admin btn-save" id="save-btn" onclick="saveUpdatedHTML()" style="display: none;">שמור והורד קובץ מעודכן</button>
+    </div>
+</div>
+
+<button class="sidebar-toggle-btn" id="sidebarToggle" onclick="openSidebar()">⚠️ פיצוח שיחות קשות</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-header">
+        <h2 class="editable-target">מדריך מהיר: פיצוח שיחות קשות בשטח</h2>
+        <button class="close-sidebar-btn" onclick="closeSidebar()">✖</button>
+    </div>
+    <div class="sidebar-content">
+        <div class="side-card">
+            <p class="editable-target"><strong>1. הבוחר העצבני והתוקפני:</strong><br>
+            כועס על שיחת הטלפון או מנתק מיד.<br>
+            <em>הפתרון:</em> לא לקחת אישית! מסמנים <strong>אדום</strong> ב-CRM ומשחררים.<br>
+            <em>נוסח לענות:</em> "אני מבינה לגמרי, סליחה על ההפרעה ושיהיה המשך יום נעים."</p>
+        </div>
+        <div class="side-card">
+            <p class="editable-target"><strong>2. הווכחן האידאולוגי (הטוקבקיסט):</strong><br>
+            מטיח סיסמאות ומנסה לגרור לוויכוח פוליטי.<br>
+            <em>הפתרון:</em> אנחנו לא פה כדי לחנך או להחזיר בתשובה פוליטית. חבל על הזמן של המטה.<br>
+            <em>נוסח לענות:</em> "אני שומעת את העמדה שלך, אנחנו כנראה לא נסכים על זה וזה בסדר גמור. המון בהצלחה ויום טוב!" (מסמנים <strong>אדום</strong> ומנתקים).</p>
+        </div>
+        <div class="side-card">
+            <p class="editable-target"><strong>3. המיואש והאדיש ("כולם מושחתים"):</strong><br>
+            תומך במחנה הליברלי אך הרים ידיים ואיבד תקווה.<br>
+            <em>הפתרון:</em> מחזירים לו את המשמעות ומגייסים אותו להגנה מהדרה.<br>
+            <em>נוסח לענות:</em> "אני כל כך מבינה אותך, כולנו מרגישים ככה לפעמים. אבל בדיוק בגלל זה אסור להשאיר את הזירה ריקה למי שמנסה למחוק אותנו מהמרחב הציבורי. מורן נלחמת בשטח כדי שהקול שלך לא ייעלם. בוא נעשה פעולה אקטיבית של שתי דקות עכשיו ביחד ונחזיר לעצמנו את הכוח."</p>
+        </div>
+        <div class="side-card">
+            <p class="editable-target"><strong>4. "שאב הזמן" (המונולוגיסט):</strong><br>
+            תומך נלהב ומקסים שמדבר דקות ארוכות על ההיסטוריה הפוליטית.<br>
+            <em>הפתרון:</em> חיתוך אלגנטי, אסרטיבי ומחבק ישירות לכיוון המטרה הפקדתית.<br>
+            <em>נוסח לענות:</em> "אתה כל כך צודק ומדהים לשמוע כמה שאתה בעניין! בדיוק בגלל שאתה מבין את החשיבות, בוא נפתח את הלינק ששלחתי לך עכשיו יחד על הקו ונסגור את ההתפקדות כדי שיהיה לנו את הכוח הרשמי שלך איתנו!"</p>
+        </div>
+        <div class="side-card">
+            <p class="editable-target"><strong>5. התנגדות: "מורן בכלל ימנית":</strong><br>
+            בבונות אלטרנטיבה שמרה על העמותה ולכן לא דיברה פוליטיקה במפורש.<br>
+            <em>הפתרון:</em> להסביר שהבית והערכים הליברליים שלה תמיד היו שם.<br>
+            <em>נוסח לענות:</em> "כשמורן הייתה בבונות אלטרנטיבה, כדי לשמור על העמותה היא בחרה לא לדבר על עמדותיה הפוליטיות במפורש. הבית שלה היה הדמוקרטים גם אז, והערכים והעמדות שלה מתכתבים איתם לחלוטין."</p>
+        </div>
+        <div style="background-color: var(--primary-light); padding: 12px; border-radius: 6px; font-size: 0.9rem; border-right: 4px solid var(--primary);">
+            <p class="editable-target"><strong>חוק ה-30 שניות:</strong> אם זיהית שהאדם אנטי, עצבני או רק מחפש לריב - סיימי את השיחה בצורה מכובדת מיד. הזמן שלך יקר!</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <header>
+        <h1 class="editable-target">תסריט שיחה לפקודי המפלגה</h1>
+        <p class="editable-target">קמפיין מורן זר קצנשטיין - מפלגת הדמוקרטים</p>
+        <div class="goal-banner">המטרה: הבטחת הקול למורן בפריימריז + גיוס מכפילי כוח 🎯</div>
+    </header>
+
+    <div class="card">
+        <div class="step-title editable-target">תפיסת המטה: מדברים עם פקוד - יש לו כבר קול, תוודאי שהוא בשבילנו!</div>
+        <div class="grid-tips">
+            <div class="tip-card editable-target" style="margin-bottom: 10px;">
+                <strong>איך פונים לפקוד/ה?</strong><br>
+                את מדברת עם מישהו/י שכבר עשה/עשתה את הצעד הגדול - להתפקד. תודי על השותפות במאבק, ומשם דברי בגובה העיניים כאל בן/בת ברית. הוא/היא כבר בפנים - עכשיו רק לוודא שמורן על הרשימה שלו/ה.</div>
+            <div class="tip-card editable-target">
+                <strong>מה עושים כשאין שם צמוד למספר?</strong><br>
+                פתחי ישר ובטבעיות:
+                <br><span style="color:var(--primary); font-weight:bold;">"שלום, מדברת &lt;&gt; מטעם המטה של מורן זר קצנשטיין. אנחנו פונים לפקודי הדמוקרטים לקראת הפריימריז. יש לך כמה דקות?"</span>
+                <br>ברגע שהם אומרים כן, את ממשיכה כרגיל עם אנרגיה גבוהה.
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; padding: 12px; background: var(--primary-light); border-radius: 8px;" class="editable-target">
+            <strong>מילות מפתח שחובה להבליט ולהדגיש בשיחה:</strong><br>
+            <span class="keyword">אשת עשייה</span> | <span class="keyword">קבלות בשטח</span> | <span class="keyword">בונות אלטרנטיבה</span> | <span class="keyword">שוויון אמיתי</span> | <span class="keyword">תוכנית סדורה ומפורטת</span> | <span class="keyword">ייצוג אמיתי</span> | <span class="keyword">מכפיל כוח למחנה</span> | <span class="keyword">רשימה מנצחת</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="step-title editable-target">שלב 1: פתיחה - הכרת תודה וחיבור מיידי</div>
+        <div class="quote-box editable-target">
+"שלום, מדברת &lt;&gt; מטעם המטה של מורן זר קצנשטיין שרצה בפריימריז במפלגת הדמוקרטים. אנחנו פונים אליך כי אתה כבר פקוד/ה במפלגה - וזה בפני עצמו עניין גדול. תודה שאתה חלק מהמאבק על עתיד המדינה. יש לך כמה דקות לדבר על הפריימריז שמתקרבים?
+
+מורן היא לא שם חדש בשבילי - אני עוקבת אחריה כבר שנים, וכשהחלטתי להצטרף למטה שלה זה היה כי אני מאמינה שהיא בדיוק סוג המנהיגות שהמפלגה שלנו צריכה כדי לגדול. אני רוצה להעביר אליך למה זה חשוב שהיא תהיה על הרשימה שלך."
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="step-title editable-target">שלב 2: הפיץ' הערכי - למה דווקא מורן, ולמה עכשיו</div>
+        <div class="quote-box editable-target">
+            "אתה כבר במפלגה, אז אני לא צריכה להסביר לך למה חשוב שיהיה קול ליברלי חזק בכנסת. מה שכן חשוב שתדע/י על מורן ספציפית:
+
+            מורן היא <span class="keyword">אשת עשייה</span> עם <span class="keyword">קבלות בשטח</span>. היא הובילה את מחאת הנשים הגדולה במדינה, הקימה את <span class="keyword">בונות אלטרנטיבה</span>, ונלחמה בוועדות הכנסת ולמען נפגעות פשעי המין של ה-7 באוקטובר. היא לא רק מדברת - היא עובדת קשה, נלחמת ולא מוותרת.
+
+            הערך המרכזי במצע שלה הוא <span class="keyword">שוויון אמיתי</span> - לא סיסמה, לא כותרת. שוויון בין נשים לגברים, שוויון בין החברה הערבית והיהודית, ושוויון בנטל. וזה לא נשאר בהצהרות - יש לה <span class="keyword">תוכנית סדורה ומפורטת</span> איך להגיע לשם, נושא אחר נושא. היא לא באה עם ססמאות - היא באה מוכנה.
+
+            אחד הצעדים המרכזיים שלה: לקדם באופן ממשי נשים מנהיגות מהחברה היהודית וגם מהחברה הערבית - כי <span class="keyword">ייצוג אמיתי</span> הוא הצעד הראשון לשוויון אמיתי, לא הפוך.
+
+            מעבר לזה, היא <span class="keyword">מכפיל כוח למחנה</span> - היא מביאה איתה קהל שלם של פעילים, נשים וצעירים שלא היו במפלגה קודם. זה בדיוק סוג הרשימה שאנחנו צריכים כדי לפרוץ את תקרת הזכוכית של הדמוקרטים בבחירות הכלליות ולבנות <span class="keyword">רשימה מנצחת</span>."
+        </div>
+    </div>
+
+    <div class="card" id="router-card">
+        <div class="step-title editable-target">שלב 3: הבקשה הישירה - קול בטוח למורן</div>
+        <div class="highlight-box editable-target">
+            <strong>💡 חשוב לזכור:</strong> הבחירה בפריימריז היא <strong>רשימתית ודיגיטלית</strong> - הפקוד מסמן רשימה של מספר מועמדים, לא רק אחד. אין להם מה להפסיד מלשים את מורן ברשימה, גם אם יש להם מועמדים נוספים שהם אוהבים.
+        </div>
+        <p style="font-weight: bold; margin-bottom: 10px;" class="editable-target">שאלי את המשיב/ה ישירות:</p>
+        <div class="quote-box editable-target" style="background-color: #fff; border-right-color: #f59e0b;">
+            "אז מה דעתך? האם אני יכולה לסמן אותך כקול בטוח למורן ברשימה שלך בפריימריז?"
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-yes" onclick="showBranch('yes')">כן, קול בטוח למורן! ✅</button>
+            <button class="btn btn-no" onclick="showBranch('no')">מתלבט/ת או עדיין לא בטוח 🤔</button>
+        </div>
+    </div>
+
+    <div id="branch-yes" class="branch card" style="border-right: 6px solid var(--success); display: none;">
+        <div class="step-title editable-target" style="color: var(--success);">נתיב א': התחייבות לקול - תודה, חיזוק והנעה להמשך</div>
+        <div class="quote-box editable-target">
+            "וואו, איזה כיף לשמוע! תודה רבה. אני מסמנת אותך אצלנו כקול בטוח למורן.
+
+            אני רוצה שתדע שזה לא ברור מאליו - כל קול חשוב לנו והתחייבות של פקוד ותיק כמוך שווה זהב. אנחנו נדאג להזכיר לך שוב ביום ההצבעה עצמו כדי לוודא שלא נשכח.
+
+            בינתיים, יש כמה דברים שאני רוצה לשלוח לך שיעזרו לך להעמיק בעמדות של מורן ולהיות חלק מהמאבק ברשת - נעבור עליהם עכשיו."
+        </div>
+        <button class="btn btn-yes" style="width: 100%; margin-top: 15px;" onclick="showNextSteps('green')">להמשיך לשליחת חומרים וגיוס מכפילי כוח</button>
+    </div>
+
+    <div id="branch-no" class="branch card" style="border-right: 6px solid var(--warning); display: none;">
+        <div class="step-title editable-target" style="color: var(--warning);">נתיב ב': הפקוד/ה מתלבט/ת - חיזוק עדין ופתיחת דלת</div>
+
+        <div class="alert-live editable-target" style="border-color: var(--warning); color: #713f12;">
+            <strong>לזכור:</strong> "מתלבט" זה לא "לא". זו הזדמנות לתת לו/ה עוד רגע לקבל החלטה - בלי לחץ. המטרה: להשאיר את הדלת פתוחה, לשלוח חומרים, ולסמן צהוב ב-CRM לחזרה בהמשך.
+        </div>
+
+        <div class="quote-box editable-target">
+            "אני מבינה לגמרי, זו החלטה חשובה ואני לא רוצה לדחוק. אני רק אזכיר שוב שבגלל שההצבעה היא רשימתית - אין בעיה לסמן את מורן <em>בנוסף</em> למועמדים אחרים שאתה מעריך. זה לא בא על חשבון אף אחד.
+
+            מה שאני כן אשמח לעשות עכשיו זה לשלוח לך כמה חומרים - את המצע המלא של מורן ואת האתר שלה, כדי שתוכל/י להתרשם לעומק ולקבל החלטה מושכלת עד יום ההצבעה. אני גם אשמח להיות בקשר ולחזור אליך שוב לפני יום ההצבעה - זה בסדר?"
+        </div>
+
+        <div class="highlight-box editable-target" style="margin-top: 15px;">
+            <strong>שאלת התנעה טובה למתלבט/ת:</strong><br>
+            "מה יגרום לך להחליט? יש נושא ספציפי שאת/ה רוצה לדעת עליו את העמדה של מורן?" - זה יאפשר לך לתת מענה ממוקד או להפנות למקום הרלוונטי במצע.
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-yes" onclick="showNextSteps('yellow')">שלחתי חומרים, נחזור אליו/ה - המשך לשלב הבא</button>
+        </div>
+    </div>
+
+    <div id="next-steps" class="branch" style="display: none;">
+        <div class="card">
+            <div class="step-title editable-target">שלב 4: שליחת חומרים - מצע, אתר וסיירת</div>
+            <div class="quote-box editable-target">
+                "אני שולחת לך עכשיו שלושה דברים בוואטסאפ - כדאי מאוד להעיף מבט:
+
+                <strong>1. המצע המלא של מורן</strong> 📋 - כל העמדות והתוכניות שלה במקום אחד, מסודר לפי נושאים. שווה קריאה גם אם רק מדפדפים.
+
+                <strong>2. האתר הרשמי של מורן</strong> 🌐 - שם תמצא/י את הביוגרפיה, ראיונות, אירועים ואת כל הפעילות הציבורית שלה בשנים האחרונות.
+
+                <strong>3. סיירת הסושיאל של מורן</strong> 📱 - קבוצת וואטסאפ פעילה שעוזרת להפיץ תכנים ולהילחם במכונת הרעל ברשת. חמש דקות ביום שעושות המון הבדל. ממש שווה להצטרף!"
+            </div>
+            <div class="highlight-box editable-target" style="margin-top: 12px;">
+                <strong>💡 שלחי את 3 הלינקים ממערכת הוואטסאפ בתחתית הדף</strong> - הזיני את המספר פעם אחת ושלחי את שלוש ההודעות ברצף.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="step-title editable-target">שלב 5: מכפילי כוח - גיוס פקודים חדשים מהמעגל האישי</div>
+            <div class="quote-box editable-target">
+                "עוד דבר אחרון וחשוב: את/ה כבר קול אחד למורן - אבל אם יש לך חבר, חברה, בן/בת זוג או קרוב משפחה שמאמינים בערכים ליברליים ועדיין לא פקודים במפלגה - זו ההזדמנות שלנו לגייס עוד קולות ממש עכשיו.
+
+                אני יכולה לשלוח לך את לינק ההתפקדות למפלגה, ואת/ה תעביר/י אותו לאנשים הרלוונטיים במעגל שלך. גם 2-3 שמות שמתפקדים בעקבות ההעברה שלך - זה הבדל אמיתי."
+            </div>
+            <div class="highlight-box editable-target" style="margin-top: 12px;">
+                <strong>אם הפקוד/ה מסכים/ה:</strong> קחי שם וטלפון של אנשים שהוא/היא מציע/ה, סמני ב-CRM כליד "חם" - ותפני אליהם אחר כך.
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="step-title editable-target">שלב 6: סיכום וסגירה חמה</div>
+            <div class="quote-box editable-target">
+                "מעולה, תודה ענקית! אני שולחת לך בוואטסאפ את המצע, האתר וקבוצת הסיירת - שווה להעיף מבט. אנחנו נהיה בקשר לפני יום ההצבעה כדי להזכיר את הפרטים.
+
+                יחד נבטיח שמורן תהיה על הרשימה של הדמוקרטים ותביא קול אמיץ וליברלי לכנסת. תודה על השותפות, יום מצוין!"
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="step-title editable-target">חובה: קביעת צבע הליד לתיעוד ב-CRM (אל תנתקי לפני שאת בטוחה בסיווג!)</div>
+        <div class="status-block">
+            <div class="status-card status-green editable-target">
+                <strong>ירוק (איתנו!)</strong><br>
+                התחייב/ה באופן ברור לסמן את מורן ברשימה בפריימריז. קול בטוח.
+            </div>
+            <div class="status-card status-yellow editable-target">
+                <strong>צהוב (מתלבט)</strong><br>
+                לא סירב/ה, אבל לא התחייב/ה. שווה לחזור אליו/ה שוב לפני יום ההצבעה עם תזכורת ואולי מענה לשאלה ספציפית.
+            </div>
+            <div class="status-card status-red editable-target">
+                <strong>אדום (לא רלוונטי)</strong><br>
+                הצהיר/ה נחרצות שלא יצביע/תצביע למורן (למשל: תמיכה נחרצת במועמד/ת אחר/ת בלבד, או עוינות).
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="step-title editable-target">תשובות מוכנות להתנגדויות (התאמה מיוחדת לפקודים)</div>
+
+        <button class="accordion editable-target">"אני כבר תומך במועמד/ת אחר/ת (נעמה, גלעד, וכו')"</button>
+        <div class="panel">
+            <p class="editable-target"><strong>התשובה המנצחת:</strong> "הם אנשים מעולים ואנחנו צריכים נבחרת חזקה. אבל שים לב שהבחירה בפריימריז היא רשימתית - אתה לא בוחר רק אחד, אלא מסמן רשימה של מועמדים. מורן לא באה על חשבונם - היא מחזקת ומגדילה את כוח המחנה, ומביאה איתה קהלים חדשים שיגדילו את המפלגה כולה בבחירות הכלליות. אין לך מה להפסיד מלסמן גם אותה."</p>
+        </div>
+
+        <button class="accordion editable-target">"אני לא מכיר/ה אותה מספיק, היא חדשה בשבילי"</button>
+        <div class="panel">
+            <p class="editable-target"><strong>התשובה המנצחת:</strong> "לגמרי הוגן, ואני שמחה שאת/ה שואל/ת. מורן לא חדשה במאבק - היא הובילה את מחאת הנשים הגדולה במדינה, הקימה את בונות אלטרנטיבה, ואחרי ה-7 באוקטובר הובילה מאבק ציבורי למען נפגעות פשעי המין של החמאס. אני שולחת לך עכשיו את המצע והאתר שלה - קראי/קרא, ואם משהו לא ברור אני חוזרת אליך."</p>
+        </div>
+
+        <button class="accordion editable-target">"אני לא בטוח שאני בכלל אצביע בפריימריז"</button>
+        <div class="panel">
+            <p class="editable-target"><strong>התשובה המנצחת:</strong> "אני לגמרי מבינה, ההצבעה לוקחת קצת זמן. אבל שים לב - אתה כבר עשית את הצעד הגדול, שילמת דמי חבר, נרשמת. חבל שהכוח הזה יילך לאיבוד. ההצבעה עצמה דיגיטלית ולוקחת פחות מ-5 דקות מהנייד. אני אשמח לשלוח לך תזכורת ביום ההצבעה עצמו עם קישור ישיר, בסדר?"</p>
+        </div>
+
+        <button class="accordion editable-target">"מה מבטיח שאם היא תיכנס היא באמת תפעל למען הערכים שלי?"</button>
+        <div class="panel">
+            <p class="editable-target"><strong>התשובה המנצחת:</strong> "שאלה מצוינת. הכי טוב להסתכל על קבלות בשטח, לא הבטחות: היא הובילה מחאה, הקימה עמותה שעובדת בפועל, נלחמה בוועדות הכנסת. היא לא באה מ'אפס' - יש לה היסטוריה שאת/ה יכול/ה לבדוק. בנוסף, המצע שאני שולחת לך מפורט וברור בעמדות שלה - זה נותן לך גיבוי ציבורי ברור לדרוש ממנה בהמשך."</p>
+        </div>
+
+        <button class="accordion editable-target">"אני מצביע/ה לרשימה סגורה בכלליות ממילא, זה לא משנה"</button>
+        <div class="panel">
+            <p class="editable-target"><strong>התשובה המנצחת:</strong> "בדיוק בגלל זה הפריימריז כל כך חשובים! אתה בכלליות מקבל רשימה מוכנה - כאן, בפריימריז, אתה זה שקובע מי יהיה על הרשימה הזאת. זה הרגע שבו הקול שלך בעצם מעצב את פני המפלגה כולה. הצבעה שלך עכשיו למורן שווה יותר מהצבעה כללית - כי כאן אתה קובע את הכיוון."</p>
+        </div>
+    </div>
+
+    <div class="card" id="whatsapp-section">
+        <div class="step-title editable-target">מערכת שליחה מהירה לוואטסאפ - החומרים המרכזיים לפקוד/ה</div>
+
+        <div class="phone-input-wrapper">
+            <label for="voter-phone">הקלידי או הדביקי את מספר הטלפון של הפקוד/ה:</label>
+            <input type="tel" id="voter-phone" class="phone-field sync-phone" placeholder="לדוגמה: 0501234567">
+        </div>
+
+        <p style="font-size: 0.85rem; margin-bottom: 5px; color: #555; font-weight: bold;" class="editable-target">הודעה 1: המצע המלא של מורן זר קצנשטיין 📋</p>
+        <div class="copy-box">
+            <span id="copy1" class="editable-target">מורן זר קצנשטיין | המצע המלא - כל העמדות והתוכניות במקום אחד: https://moranzer-platform.vercel.app/</span>
+            <div class="action-buttons">
+                <button class="btn-action btn-copy" onclick="copyText('copy1')">העתק</button>
+                <button class="btn-action btn-wa" onclick="sendWhatsApp('copy1')">שלח 💬</button>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; margin-bottom: 5px; color: #555; font-weight: bold;" class="editable-target">הודעה 2: האתר הרשמי של מורן 🌐</p>
+        <div class="copy-box">
+            <span id="copy2" class="editable-target">מורן זר קצנשטיין | האתר הרשמי - ביוגרפיה, ראיונות ופעילות ציבורית: https://www.moranzer.co.il</span>
+            <div class="action-buttons">
+                <button class="btn-action btn-copy" onclick="copyText('copy2')">העתק</button>
+                <button class="btn-action btn-wa" onclick="sendWhatsApp('copy2')">שלח 💬</button>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; margin-bottom: 5px; color: #555; font-weight: bold;" class="editable-target">הודעה 3: סיירת הסושיאל של מורן 📱</p>
+        <div class="copy-box">
+            <span id="copy3" class="editable-target">מורן זר קצנשטיין | הצטרפו לסיירת הסושיאל הלוחמת - חמש דקות ביום שעושות הבדל: https://bit.ly/moranSocialGroup</span>
+            <div class="action-buttons">
+                <button class="btn-action btn-copy" onclick="copyText('copy3')">העתק</button>
+                <button class="btn-action btn-wa" onclick="sendWhatsApp('copy3')">שלח 💬</button>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; margin-bottom: 5px; color: #555; font-weight: bold;" class="editable-target">הודעה 4: לינק התפקדות למפלגה - להעברה למכפילי כוח 🔗</p>
+        <div class="copy-box">
+            <span id="copy4" class="editable-target">מפלגת הדמוקרטים | מורן זר קצנשטיין קוראת לך להתפקד עכשיו ולהצטרף למאבק: https://bit.ly/JoinDemocratsMoranZer</span>
+            <div class="action-buttons">
+                <button class="btn-action btn-copy" onclick="copyText('copy4')">העתק</button>
+                <button class="btn-action btn-wa" onclick="sendWhatsApp('copy4')">שלח 💬</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let isEditingMode = false;
+
+    function openSidebar() {
+        document.getElementById('sidebarDrawer').classList.add('open');
+        document.getElementById('sidebarOverlay').classList.add('open');
+    }
+
+    // סגירת התפריט הצדי בצורה חלקה
+    function closeSidebar() {
+        document.getElementById('sidebarDrawer').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('open');
+    }
+
+    function toggleEditMode() {
+        isEditingMode = !isEditingMode;
+        const body = document.body;
+        const editBtn = document.getElementById('edit-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const targets = document.querySelectorAll('.editable-target');
+
+        if (isEditingMode) {
+            body.classList.add('edit-active');
+            editBtn.innerText = "בטל מצב עריכה 🔓";
+            editBtn.style.backgroundColor = "#ef4444";
+            editBtn.style.color = "white";
+            saveBtn.style.display = "block";
+            
+            targets.forEach(el => { el.setAttribute('contenteditable', 'true'); });
+        } else {
+            body.classList.remove('edit-active');
+            editBtn.innerText = "הפעל מצב עריכה";
+            editBtn.style.backgroundColor = "var(--warning)";
+            editBtn.style.color = "#0f172a";
+            saveBtn.style.display = "none";
+            
+            targets.forEach(el => { el.removeAttribute('contenteditable'); });
+        }
+    }
+
+    function saveUpdatedHTML() {
+        if (isEditingMode) { toggleEditMode(); }
+        const fullContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([fullContent], { type: "text/html; charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "תסריט_שיחה_מטה_מורן_רספונסיבי_סופי.html";
+        link.click();
+    }
+
+    function showBranch(branchType) {
+        document.getElementById('branch-yes').style.display = 'none';
+        document.getElementById('branch-no').style.display = 'none';
+        document.getElementById('next-steps').style.display = 'none';
+        
+        if(branchType === 'yes') {
+            document.getElementById('branch-yes').style.display = 'block';
+        } else if(branchType === 'no') {
+            document.getElementById('branch-no').style.display = 'block';
+        }
+    }
+
+    function showNextSteps(finalColor) {
+        document.getElementById('next-steps').style.display = 'block';
+        document.getElementById('next-steps').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    var acc = document.getElementsByClassName("accordion");
+    for (var i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            if (isEditingMode) return;
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            } 
+        });
+    }
+
+    // סנכרון שדות הטלפון (ברגע שכותבים באחד, זה מתעדכן בשני)
+    const phoneInputs = document.querySelectorAll('.sync-phone');
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            phoneInputs.forEach(otherInput => {
+                if (otherInput !== this) {
+                    otherInput.value = this.value;
+                }
+            });
+        });
+    });
+
+    function copyText(elementId) {
+        var text = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(text).then(function() {
+            alert("הטקסט הועתק בהצלחה!");
+        }, function(err) {
+            alert("שגיאה בהעתקה");
+        });
+    }
+
+    function sendWhatsApp(elementId) {
+        let phoneInput = document.getElementById('voter-phone').value.trim();
+        let cleanedPhone = phoneInput.replace(/[-\\s]/g, '');
+        
+        if (!cleanedPhone) {
+            alert("אנא הזיני תחילה את מספר הטלפון של הבוחר בתיבה הממוקמת תחת מערכת הודעות וואטסאפ מהירה.");
+            document.getElementById('voter-phone').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('voter-phone').focus();
+            return;
+        }
+        
+        if (cleanedPhone.startsWith('0')) { cleanedPhone = cleanedPhone.substring(1); }
+        if (!cleanedPhone.startsWith('972')) { cleanedPhone = '972' + cleanedPhone; }
+        
+        let elem = document.getElementById(elementId);
+        let messageText = elem.textContent || elem.innerText;
+        let encodedMessage = encodeURIComponent(messageText);
+        
+        let whatsappUrl = "https://wa.me/" + cleanedPhone + "?text=" + encodedMessage;
+        window.open(whatsappUrl, '_blank');
+    }
+</script>
+
+
+</body></html>
